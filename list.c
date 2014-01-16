@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <stdio.h>
 
 typedef struct Node *Node;
 
@@ -113,3 +114,20 @@ void* list_peek(List list)
   return list->head->data;
 }
 
+void* list_item(List list, size_t index)
+{
+  if (index >= list->length)
+  {
+    printf("Given index is greater than the number of list items.\n");
+    return NULL;
+  }
+  else
+  {
+    Node ptr = list->head;
+    for (int i = 0; i != index; ++i)
+    {
+      ptr = ptr->next;
+    }
+    return ptr->data;
+  }
+}

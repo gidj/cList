@@ -17,5 +17,5 @@ extern void* list_pop(List list);
 extern void* list_peek(List list);
 extern void* list_head(List list);
 extern void* list_tail(List list);
-
+extern void* list_item(List list, size_t index);
 #endif
