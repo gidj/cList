@@ -3,6 +3,13 @@
 #include <stdlib.h>
 #include <assert.h>
 
+typedef struct Node *Node;
+
+struct Node {
+  void *data;
+  Node next;
+};
+
 struct List {
   int length;
   int elementSize;
@@ -10,21 +17,16 @@ struct List {
   Node tail;
 };
 
-struct Node {
-  void *data;
-  Node next;
-};
-
 List list_new(int elementSize)
 {
   assert(elementSize > 0);
-  List new_list = malloc(sizeof(*new_list));
+  List n = malloc(sizeof(*n));
 
-  new_list->length = 0;
-  new_list->elementSize = elementSize;
-  new_list->head = new_list->tail = NULL;
+  n->length = 0;
+  n->elementSize = elementSize;
+  n->head = n->tail = NULL;
 
-  return new_list;
+  return n;
 }
 
 void list_destroy(List *list)
@@ -35,7 +37,7 @@ void list_destroy(List *list)
   while((*list)->head) {
     current = (*list)->head;
     (*list)->head = current->next;
-    free(current->dat);
+    free(current->data);
     free(current);
   }
 
@@ -43,7 +45,12 @@ void list_destroy(List *list)
   *list = NULL;
 }
 
-void list_append(List list, void *element)
+size_t list_length(List list)
+{
+  return list->length;
+}
+
+void* list_append(List list, void *element)
 {
   assert(list);
   assert(element);
@@ -65,9 +72,10 @@ void list_append(List list, void *element)
   }
     
   list->length++;
+  return new_node->data;
 }
 
-void list_prepend(List list, void *element)
+void* list_prepend(List list, void *element)
 {
   assert(list);
   assert(element);
@@ -79,53 +87,29 @@ void list_prepend(List list, void *element)
   new_node->next = list->head;
   list->head = new_node;
 
-  if (!list->tail)
-  {
-    list->tail = new_node;
-  }
+  if (!list->tail) { list->tail = new_node; }
 
   list->length++;
+  return new_node->data;
 }
 
-
-int list_length(List list)
+void* list_pop(List list)
 {
-  return list->length;
-}
-
-void* list_head(List list, void *element, bool removeElement)
-{
-  assert(list->head);
-
-  memcpy(element, list->head->data, list->elementSize);
-
-  if (removeElement)
-  {
-    Node elem = list->head;
-    list->head = list->head->next;
-    free(elem->data);
-    free(elem);
-    list->length--;
-  }
+  void* data;
+  memcpy(data, list->head->data, list->elementSize);
   
-  return element;
-}
+  Node tmp = list->head;
+  list->head = list->head->next;
 
-void* list_tail(List list, void *element)
-{
-  assert(list->tail);
-  memcpy(element, list->tail->data, list->elementSize);
-  return element;
+  free(tmp->data);
+  free(tmp);
+
+  list->length--;
+  return data;
 }
 
 void* list_peek(List list)
 {
   return list->head->data;
 }
-
-void* node_data(Node node)
-{
-  return node->data;
-}
-
 
