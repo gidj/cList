@@ -94,6 +94,32 @@ void* list_prepend(List list, void *element)
   return new_node->data;
 }
 
+void* list_insert(List list, void *element, size_t index)
+{
+  assert(list);
+  assert(element);
+  assert(index < list->length);
+
+  Node *cursor = &(list->head);
+  size_t i = 0;
+
+  while (i < index){
+    *cursor = (*cursor)->next;
+    i++;    
+  }
+
+  Node new_node = malloc(sizeof(*new_node));
+  new_node->data = malloc(list->elementSize);
+  memcpy(new_node->data, element, list->elementSize);
+
+  new_node->next = (*cursor)->next;
+  *cursor = new_node;
+
+  list->length++;
+
+  return (*cursor)->data;
+}
+
 void* list_pop(List list)
 {
   void* data;

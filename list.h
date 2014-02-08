@@ -12,6 +12,7 @@ extern size_t list_length(List list);
 
 extern void* list_append(List list, void *element);
 extern void* list_prepend(List list, void *element);
+extern void* list_insert(List list, void *element, size_t index);
 
 extern void* list_pop(List list);
 extern void* list_peek(List list);
