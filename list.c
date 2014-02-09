@@ -120,6 +120,26 @@ void* list_insert(List list, void *element, size_t index)
   return (*cursor)->data;
 }
 
+void list_remove(List list, size_t index)
+{
+  assert(list);
+  assert(index < list->length);
+
+  Node *cursor = &(list->head);
+  size_t i = 0;
+
+  while (i < index){
+    *cursor = (*cursor)->next;
+    i++;    
+  }
+  
+  Node tmp = *cursor;
+  *cursor = (*cursor)->next;
+  free((*cursor)->data);
+  free(*cursor);
+}
+
+
 void* list_pop(List list)
 {
   void* data;
